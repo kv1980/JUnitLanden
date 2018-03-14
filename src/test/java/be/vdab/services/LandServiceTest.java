@@ -17,30 +17,25 @@ import be.vdab.repositories.LandRepository;
 public class LandServiceTest {
 	private LandRepository landRepository;
 	private LandService landService;
-	
+
 	@Before
 	public void before() {
 		landRepository = mock(LandRepository.class);
 		when(landRepository.findOppervlakteAlleLanden()).thenReturn(20);
-		when(landRepository.read("B")).thenReturn(new Land("B",5));
-		when(landRepository.read("NL")).thenReturn(new Land("B",6));
+		when(landRepository.read("B")).thenReturn(new Land("B", 5));
+		when(landRepository.read("NL")).thenReturn(new Land("B", 6));
 		when(landRepository.read("")).thenThrow(new IllegalArgumentException());
 		landService = new LandService(landRepository);
 	}
 
-	@Test
-	public void findVerhoudingOppervlakteBelgieTovOppervlakteAlleLanden() {
-		assertEquals(0, BigDecimal.valueOf(0.25).compareTo(landService.findVerhoudingOppervlakteLandTovOppervlakteAlleLanden("B")));
+	@Test(expected = IllegalArgumentException.class)
+	public void findVerhoudingOppervlakteLandTovOppervlakteAlleLanden() {
+		assertEquals(0, BigDecimal.valueOf(0.25)
+				.compareTo(landService.findVerhoudingOppervlakteLandTovOppervlakteAlleLanden("B")));
+		assertEquals(0, BigDecimal.valueOf(0.30)
+				.compareTo(landService.findVerhoudingOppervlakteLandTovOppervlakteAlleLanden("NL")));
+		landService.findVerhoudingOppervlakteLandTovOppervlakteAlleLanden("");
+		verify(landRepository).findOppervlakteAlleLanden();
+		verify(landRepository).read("B");
 	}
-	
-	@Test
-	public void findVerhoudingOppervlakteNederlandTovOppervlakteAlleLanden() {
-		assertEquals(0, BigDecimal.valueOf(0.30).compareTo(landService.findVerhoudingOppervlakteLandTovOppervlakteAlleLanden("NL")));
-	}
-	
-	@Test (expected = IllegalArgumentException())
-	public void findGeenVerhoudingBijGeenLand {
-		assertEquals(0, BigDecimal.valueOf(0.30).compareTo(landService.findVerhoudingOppervlakteLandTovOppervlakteAlleLanden("NL")));
-	}
-
 }
