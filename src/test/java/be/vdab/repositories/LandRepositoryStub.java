@@ -9,6 +9,7 @@ public class LandRepositoryStub implements LandRepository {
 		return new Land(landcode,5);
 	}
 
+	@Override
 	public int findOppervlakteAlleLanden() {
 		return 20;
 	}
